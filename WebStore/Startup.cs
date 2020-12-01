@@ -19,7 +19,7 @@ namespace WebStore
         // to add services to the container
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
         }
 
         // to configure the HTTP request pipeline
