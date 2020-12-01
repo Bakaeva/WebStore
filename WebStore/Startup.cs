@@ -19,6 +19,7 @@ namespace WebStore
         // to add services to the container
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllersWithViews();
         }
 
         // to configure the HTTP request pipeline
@@ -29,14 +30,18 @@ namespace WebStore
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseStaticFiles();
+
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync(_configuration["Greetings"]);
-                });
+                endpoints.MapGet("/greetings", async context => await context.Response.WriteAsync(_configuration["Greetings"]));
+                endpoints.MapGet("/helloWorld", async context => await context.Response.WriteAsync("HelloWorld"));
+
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
