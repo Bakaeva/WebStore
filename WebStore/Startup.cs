@@ -9,11 +9,11 @@ namespace WebStore
 {
     public class Startup
     {
-        readonly IConfiguration _Configuration;
+        readonly IConfiguration _configuration;
 
-        public Startup(IConfiguration Configuration)
+        public Startup(IConfiguration configuration)
         {
-            _Configuration = Configuration;
+            _configuration = configuration;
         }
 
         // to add services to the container
@@ -35,7 +35,7 @@ namespace WebStore
             {
                 endpoints.MapGet("/", async context =>
                 {
-                    await context.Response.WriteAsync("Hello World!");
+                    await context.Response.WriteAsync(_configuration["Greetings"]);
                 });
             });
         }
