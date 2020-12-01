@@ -36,9 +36,6 @@ namespace WebStore
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/greetings", async context => await context.Response.WriteAsync(_configuration["Greetings"]));
-                endpoints.MapGet("/helloWorld", async context => await context.Response.WriteAsync("HelloWorld"));
-
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

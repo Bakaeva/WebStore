@@ -1,0 +1,21 @@
+﻿@model WebStore.Models.Employee
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+</head>
+<body>
+    <div>
+        <div>@Model.FirstName @Model.LastName</div>
+        <div>Возраст: @Model.Age</div>
+        <div>Дата трудоустройства: @Model.DateOfEmployment.ToShortDateString()</div>
+    </div>
+
+    <hr />
+    <a href="~/">Домой</a>
+    <a href="~/Home/Employees">К списку сотрудников</a>
+</body>
+</html>

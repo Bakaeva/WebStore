@@ -21,5 +21,9 @@ namespace WebStore.Models
 
         /// <summary>Возраст</summary>
         public int Age { get; set; }
+
+        /// <summary>Дата устройства на работу</summary>
+        public DateTime DateOfEmployment { get; set; }
+
     }
 }
