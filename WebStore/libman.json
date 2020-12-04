@@ -1,0 +1,38 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "twitter-bootstrap@3.0.3",
+      "destination": "wwwroot/lib/bootstrap/",
+      "files": [
+        "js/bootstrap.min.js",
+        "css/bootstrap.min.css"
+      ]
+    },
+    {
+      "library": "jquery@1.10.2",
+      "destination": "wwwroot/lib/jquery/",
+      "files": [
+        "jquery.js"
+      ]
+    },
+    {
+      "library": "html5shiv@3.6.2",
+      "destination": "wwwroot/lib/html5shiv/",
+      "files": [
+        "html5shiv.js"
+      ]
+    },
+    {
+      "library": "font-awesome@4.0.2",
+      "destination": "wwwroot/lib/font-awesome/",
+      "files": [
+        "css/font-awesome.min.css",
+        "fonts/fontawesome-webfont.svg",
+        "fonts/FontAwesome.otf",
+        "fonts/fontawesome-webfont.woff"
+      ]
+    }
+  ]
+}
