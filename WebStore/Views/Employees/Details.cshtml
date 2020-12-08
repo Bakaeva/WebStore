@@ -1,0 +1,22 @@
+﻿@model WebStore.Models.Employee
+
+<!DOCTYPE html>
+
+<div class="container">
+    <dl class="dl-horizontal">
+        <dt>Id</dt>
+        <dd>@Model.Id</dd>
+
+        <dt>ФИО</dt>
+        <dd>@Model.LastName @Model.FirstName @Model.Patronymic</dd>
+
+        <dt>Возраст</dt>
+        <dd>@Model.Age</dd>
+
+        <dt>Дата трудоустройства</dt>
+        <dd>@Model.DateOfEmployment.ToShortDateString()</dd>
+    </dl>
+
+    <hr/>
+    <a asp-action="Index" class="btn btn-default">К списку сотрудников</a>
+</div>
