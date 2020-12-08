@@ -16,20 +16,33 @@ namespace WebStore.Controllers
 
         public IActionResult Details(int id)
         {
-            var employee = _employees.FirstOrDefault(item => item.Id == id);
+            var employee = GetById(id);
             if (employee != null)
                 return View(employee);
 
             return NotFound();
         }
 
+        Employee GetById(int id)
+        {
+            return _employees.FirstOrDefault(item => item.Id == id);
+        }
+
         public IActionResult Remove(int id)
         {
-            return;
+            var employee = GetById(id);
+            if (employee != null)
+                _employees​.Remove​(employee​);
+            return null;
         }
 
         public IActionResult Edit(int id)
         {
-            return;
+            var employee = GetById(id);
+            if (employee != null)
+                return View(employee); // должна вызываться форма редактирования сотрудника
+
+            return NotFound();
         }
     }
+}
