@@ -9,16 +9,17 @@ namespace WebStore
 {
     public class Startup
     {
-        readonly IConfiguration _Configuration;
+        readonly IConfiguration _configuration;
 
-        public Startup(IConfiguration Configuration)
+        public Startup(IConfiguration configuration)
         {
-            _Configuration = Configuration;
+            _configuration = configuration;
         }
 
         // to add services to the container
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
         }
 
         // to configure the HTTP request pipeline
@@ -29,14 +30,15 @@ namespace WebStore
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseStaticFiles();
+
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
