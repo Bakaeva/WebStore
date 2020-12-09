@@ -33,16 +33,20 @@ namespace WebStore.Controllers
             var employee = GetById(id);
             if (employee != null)
                 _employees​.Remove​(employee​);
-            return null;
+            return View("Index", _employees);
         }
 
         public IActionResult Edit(int id)
         {
             var employee = GetById(id);
             if (employee != null)
-                return View(employee); // должна вызываться форма редактирования сотрудника
-
+                return View("EmployeeView", employee); // вызов представления с формой редактирования сотрудника
             return NotFound();
+        }
+
+        public IActionResult Commit()
+        {
+            return NoContent(); // временная заглушка
         }
     }
 }
