@@ -6,14 +6,17 @@ using WebStore.Models;
 
 namespace WebStore.Controllers
 {
+    //[Route("Users")]
     public class EmployeesController : Controller
     {
         List<Employee> _employees;
 
         public EmployeesController() => _employees = TestData.Employees;
 
+        //[Route("All")]
         public IActionResult Index() => View(_employees);
 
+        //[Route("Info({id})")]
         public IActionResult Details(int id)
         {
             var employee = GetById(id);
