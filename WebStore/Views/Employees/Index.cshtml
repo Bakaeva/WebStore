@@ -13,6 +13,7 @@
                 <th>Отчество</th>
                 <th>Возраст</th>
                 <th></th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -30,10 +31,9 @@
                     </a>
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@employee.Id">Редактировать</a>
-                </td>
-                <td>
-                    <a asp-action="Remove" asp-route-id="@employee.Id">Удалить</a>
+                    <a asp-action="Edit" asp-route-id="@employee.Id">
+                        <i class="fa fa-edit"></i>
+                    </a>
                 </td>
             </tr>
             }

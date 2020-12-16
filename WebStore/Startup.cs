@@ -5,7 +5,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebStore.Infrastructure.Conventions;
+using WebStore.Infrastructure.Interfaces;
 using WebStore.Infrastructure.Middleware;
+using WebStore.Infrastructure.Services;
 
 namespace WebStore
 {
@@ -18,9 +20,11 @@ namespace WebStore
             _configuration = configuration;
         }
 
-        // to add services to the container
+        // to add services to the container:
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
+
             services
                 .AddControllersWithViews(opt =>
                 {
@@ -29,7 +33,7 @@ namespace WebStore
                 .AddRazorRuntimeCompilation();
         }
 
-        // to configure the HTTP request pipeline
+        // to configure the HTTP request pipeline:
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

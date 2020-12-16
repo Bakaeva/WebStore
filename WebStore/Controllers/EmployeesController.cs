@@ -3,49 +3,108 @@ using System.Collections.Generic;
 using System.Linq;
 using WebStore.Data;
 using WebStore.Models;
+using WebStore.Infrastructure.Interfaces;
+using WebStore.ViewModels;
+using System;
 
 namespace WebStore.Controllers
 {
     //[Route("Users")]
     public class EmployeesController : Controller
     {
-        List<Employee> _employees;
-
-        public EmployeesController() => _employees = TestData.Employees;
+        readonly IEmployeesData _employeeService;
+        public EmployeesController(IEmployeesData employees) => _employeeService = employees;
 
         //[Route("All")]
-        public IActionResult Index() => View(_employees);
+        public IActionResult Index()
+        {
+            var employees = _employeeService.Get();
+            return View(employees);
+        }
 
         //[Route("Info({id})")]
         public IActionResult Details(int id)
         {
-            var employee = GetById(id);
+            var employee = _employeeService.Get(id);
             if (employee != null)
                 return View(employee);
 
             return NotFound();
         }
 
-        Employee GetById(int id)
-        {
-            return _employees.FirstOrDefault(item => item.Id == id);
-        }
-
-        public IActionResult Remove(int id)
-        {
-            var employee = GetById(id);
-            if (employee != null)
-                _employees​.Remove​(employee​);
-            return View("Index", _employees);
-        }
-
+        #region Edit
         public IActionResult Edit(int id)
         {
-            var employee = GetById(id);
-            if (employee != null)
-                return View("EmployeeView", employee); // вызов представления с формой редактирования сотрудника
-            return NotFound();
+            if (id < 0)
+                return BadRequest();
+
+            var employee = _employeeService.Get(id);
+            if (employee == null)
+                return NotFound();
+
+            return View(new EmployeesViewModel
+            {
+                Id = id,
+                LastName = employee.LastName,
+                FirstName = employee.FirstName,
+                Patronymic = employee.Patronymic,
+                Age = employee.Age,
+                DateOfEmployment = employee.DateOfEmployment,
+            }); // вызов представления-формы редактирования сотрудника
         }
+
+        [HttpPost]
+        public IActionResult Edit(EmployeesViewModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            var employee = new Employee
+            {
+                Id = model.Id,
+                LastName = model.LastName,
+                FirstName = model.FirstName,
+                Patronymic = model.Patronymic,
+                Age = model.Age,
+                DateOfEmployment = model.DateOfEmployment,
+            };
+            _employeeService.Update(employee);
+
+            return RedirectToAction("Index");
+        }
+        #endregion
+
+        #region Delete
+        public IActionResult Delete(int id)
+        {
+            if (id < 0)
+                return BadRequest();
+
+            var employee = _employeeService.Get(id);
+            if (employee == null)
+                return NotFound();
+
+            return View(new EmployeesViewModel
+            {
+                Id = id,
+                LastName = employee.LastName,
+                FirstName = employee.FirstName,
+                Patronymic = employee.Patronymic,
+                Age = employee.Age,
+                DateOfEmployment = employee.DateOfEmployment,
+            }); // вызов представления-формы с кнопкой подтверждения на удаление сотрудника
+        }
+
+        [HttpPost]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            if (id < 0)
+                return BadRequest();
+
+            _employeeService.Delete(id);
+            return RedirectToAction("Index");
+        }            
+        #endregion
 
         public IActionResult Commit()
         {
