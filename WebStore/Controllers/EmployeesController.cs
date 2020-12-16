@@ -32,19 +32,24 @@ namespace WebStore.Controllers
             return NotFound();
         }
 
+        public IActionResult Create() => View("Edit", new EmployeesViewModel());
+
         #region Edit
-        public IActionResult Edit(int id)
+        public IActionResult Edit(int? id)
         {
+            if (id == null)
+                return View(new EmployeesViewModel()); // вызов представления-формы добавления сотрудника
+
             if (id < 0)
                 return BadRequest();
 
-            var employee = _employeeService.Get(id);
+            var employee = _employeeService.Get((int)id);
             if (employee == null)
                 return NotFound();
 
             return View(new EmployeesViewModel
             {
-                Id = id,
+                Id = (int)id,
                 LastName = employee.LastName,
                 FirstName = employee.FirstName,
                 Patronymic = employee.Patronymic,
@@ -68,7 +73,11 @@ namespace WebStore.Controllers
                 Age = model.Age,
                 DateOfEmployment = model.DateOfEmployment,
             };
-            _employeeService.Update(employee);
+
+            if (employee.Id == 0)
+                _employeeService.Add(employee);
+            else
+                _employeeService.Update(employee);
 
             return RedirectToAction("Index");
         }
