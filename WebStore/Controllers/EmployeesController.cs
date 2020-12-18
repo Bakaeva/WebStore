@@ -61,6 +61,14 @@ namespace WebStore.Controllers
         [HttpPost]
         public IActionResult Edit(EmployeesViewModel model)
         {
+            DateTime dateOfRegistration = new DateTime(2000, 9, 1); // дата регистрации фирмы
+            if (model.DateOfEmployment < dateOfRegistration || model.DateOfEmployment > DateTime.Today.Date)
+               ModelState.AddModelError("DateOfEmployment", "Дата устройства на работу должна быть не ранее "
+                   + dateOfRegistration.ToShortDateString() + " и не позднее сегодняшней даты");
+            //ModelState.AddModelError("", "Текст сообщения об ошибке"); // если в I параметре св-во не указано, то сообщение применимо ко всей модели
+
+            if (!ModelState.IsValid) return View(model);
+
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
