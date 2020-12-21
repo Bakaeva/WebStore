@@ -5,17 +5,14 @@ using WebStore.Domain.Entities.Base.Interfaces;
 
 namespace WebStore.ViewModels
 {
-    public class ProductViewModel : INamedEntity, IOrderedEntity
+    public class ProductViewModel : INamedEntity
     {
         public int Id { get; set; }
 
         public string Name { get; set; }
 
-        public int Order { get; set; }
-
         public string ImageUrl​​ { get; set; }
 
-        /// <summary>Цена товара</summary>
         public decimal Price { get; set; }
     }
 }

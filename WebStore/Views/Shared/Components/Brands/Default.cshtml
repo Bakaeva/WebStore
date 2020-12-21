@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BrandViewModel>
+﻿@model IEnumerable<WebStore.ViewModels.BrandViewModel>
 
 <div class="brands_products">
     <h2>Бренды</h2>
@@ -7,7 +7,7 @@
             @foreach (var brand in Model)
             {
                 <li>
-                    <a href="#">
+                    <a asp-controller="Catalog" asp-action="Shop" asp-route-BrandId="@brand.Id">
                         <span class="pull-right">(50)</span>@brand.Name
                     </a>
                 </li>
