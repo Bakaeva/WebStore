@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
 namespace WebStore.Controllers
@@ -10,6 +11,8 @@ namespace WebStore.Controllers
         public HomeController(IConfiguration configuration) => _configuration = configuration;
 
         public IActionResult Index() => View();
+
+        public IActionResult Throw(string id) => throw new ApplicationException(id);
 
         public IActionResult Blog() => View();
         public IActionResult BlogSingle() => View();

@@ -3,46 +3,125 @@ using System.Collections.Generic;
 using System.Linq;
 using WebStore.Data;
 using WebStore.Models;
+using WebStore.Infrastructure.Interfaces;
+using WebStore.ViewModels;
+using System;
 
 namespace WebStore.Controllers
 {
+    //[Route("Users")]
     public class EmployeesController : Controller
     {
-        List<Employee> _employees;
+        readonly IEmployeesData _employeeService;
+        public EmployeesController(IEmployeesData employees) => _employeeService = employees;
 
-        public EmployeesController() => _employees = TestData.Employees;
+        //[Route("All")]
+        public IActionResult Index()
+        {
+            var employees = _employeeService.Get();
+            return View(employees);
+        }
 
-        public IActionResult Index() => View(_employees);
-
+        //[Route("Info({id})")]
         public IActionResult Details(int id)
         {
-            var employee = GetById(id);
+            var employee = _employeeService.Get(id);
             if (employee != null)
                 return View(employee);
 
             return NotFound();
         }
 
-        Employee GetById(int id)
+        public IActionResult Create() => View("Edit", new EmployeesViewModel());
+
+        #region Edit
+        public IActionResult Edit(int? id)
         {
-            return _employees.FirstOrDefault(item => item.Id == id);
+            if (id == null)
+                return View(new EmployeesViewModel()); // вызов представления-формы добавления сотрудника
+
+            if (id < 0)
+                return BadRequest();
+
+            var employee = _employeeService.Get((int)id);
+            if (employee == null)
+                return NotFound();
+
+            return View(new EmployeesViewModel
+            {
+                Id = (int)id,
+                LastName = employee.LastName,
+                FirstName = employee.FirstName,
+                Patronymic = employee.Patronymic,
+                Age = employee.Age,
+                DateOfEmployment = employee.DateOfEmployment,
+            }); // вызов представления-формы редактирования сотрудника
         }
 
-        public IActionResult Remove(int id)
+        [HttpPost]
+        public IActionResult Edit(EmployeesViewModel model)
         {
-            var employee = GetById(id);
-            if (employee != null)
-                _employees​.Remove​(employee​);
-            return View("Index", _employees);
+            DateTime dateOfRegistration = new DateTime(2000, 9, 1); // дата регистрации фирмы
+            if (model.DateOfEmployment < dateOfRegistration || model.DateOfEmployment > DateTime.Today.Date)
+               ModelState.AddModelError("DateOfEmployment", "Дата устройства на работу должна быть не ранее "
+                   + dateOfRegistration.ToShortDateString() + " и не позднее сегодняшней даты");
+            //ModelState.AddModelError("", "Текст сообщения об ошибке"); // если в I параметре св-во не указано, то сообщение применимо ко всей модели
+
+            if (!ModelState.IsValid) return View(model);
+
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            var employee = new Employee
+            {
+                Id = model.Id,
+                LastName = model.LastName,
+                FirstName = model.FirstName,
+                Patronymic = model.Patronymic,
+                Age = model.Age,
+                DateOfEmployment = model.DateOfEmployment,
+            };
+
+            if (employee.Id == 0)
+                _employeeService.Add(employee);
+            else
+                _employeeService.Update(employee);
+
+            return RedirectToAction("Index");
+        }
+        #endregion
+
+        #region Delete
+        public IActionResult Delete(int id)
+        {
+            if (id < 0)
+                return BadRequest();
+
+            var employee = _employeeService.Get(id);
+            if (employee == null)
+                return NotFound();
+
+            return View(new EmployeesViewModel
+            {
+                Id = id,
+                LastName = employee.LastName,
+                FirstName = employee.FirstName,
+                Patronymic = employee.Patronymic,
+                Age = employee.Age,
+                DateOfEmployment = employee.DateOfEmployment,
+            }); // вызов представления-формы с кнопкой подтверждения на удаление сотрудника
         }
 
-        public IActionResult Edit(int id)
+        [HttpPost]
+        public IActionResult DeleteConfirmed(int id)
         {
-            var employee = GetById(id);
-            if (employee != null)
-                return View("EmployeeView", employee); // вызов представления с формой редактирования сотрудника
-            return NotFound();
-        }
+            if (id < 0)
+                return BadRequest();
+
+            _employeeService.Delete(id);
+            return RedirectToAction("Index");
+        }            
+        #endregion
 
         public IActionResult Commit()
         {

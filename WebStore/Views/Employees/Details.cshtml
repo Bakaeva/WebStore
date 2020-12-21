@@ -1,9 +1,11 @@
 ﻿@model WebStore.Models.Employee
-
-<!DOCTYPE html>
+@{
+    ViewData["Title"] = $"Сведения о сотруднике с id={Model.Id}";
+}
 
 <div class="container">
-    <h3>Просмотр сведений о сотруднике:</h3>
+    <h3>@ViewData["Title"]</h3>
+    <hr />
     <dl class="dl-horizontal">
         <dt>Id</dt>
         <dd>@Model.Id</dd>
@@ -19,5 +21,11 @@
     </dl>
 
     <hr />
-    <a asp-action="Index" class="btn btn-default">К списку сотрудников</a>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-default">
+        <i class="fa fa-edit"></i> Редактировать
+    </a>
+    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">
+        <i class="fa fa-trash-o"></i>Удалить
+    </a>
+    <a asp-action="Index" class="btn btn-info">К списку сотрудников</a>
 </div>
