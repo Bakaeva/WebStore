@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using WebStore.DAL.Context;
 using WebStore.Domain;
@@ -13,9 +14,9 @@ namespace WebStore.Infrastructure.Services.InSQL
 
         public SqlProductData(WebStoreDB db) => _db = db;
 
-        public IEnumerable<Brand> GetBrands() => _db.Brands;        
+        public IEnumerable<Brand> GetBrands() => _db.Brands.Include(brand => brand.Products);
 
-        public IEnumerable<Section> GetSections() => _db.Sections;
+        public IEnumerable<Section> GetSections() => _db.Sections.Include(section => section.Products);
 
         public IEnumerable<Product> GetProducts(ProductFilter filter = null)
         {
