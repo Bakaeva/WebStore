@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebStore.DAL.Context;
+using WebStore.Data;
 //using WebStore.Infrastructure.Conventions;
 using WebStore.Infrastructure.Interfaces;
 using WebStore.Infrastructure.Services;
@@ -24,6 +25,7 @@ namespace WebStore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<WebStoreDB>(opt => opt.UseSqlServer(_configuration.GetConnectionString("Default")));
+            services.AddTransient<WebStoreDbInitializer>();
 
             //services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
             //services.AddScoped<IEmployeesData, InMemoryEmployeesData>();
@@ -42,8 +44,10 @@ namespace WebStore
         }
 
         // to configure the HTTP request pipeline:
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, WebStoreDbInitializer db)
         {
+            db.Initialize();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
