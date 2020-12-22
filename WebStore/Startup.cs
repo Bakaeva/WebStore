@@ -23,9 +23,14 @@ namespace WebStore
         // to add services to the container:
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
+            //services.AddScoped<IEmployeesData, InMemoryEmployeesData>();
+            //services.AddSingleton<IEmployeesData, InMemoryEmployeesData>();
+
             services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
             //services.AddTransient<IEmployeesData>(service => new InMemoryEmployeesData());
-
+          
+            services.AddTransient<IProductData, InMemoryProductData>();
             services
                 .AddControllersWithViews(opt =>
                 {
