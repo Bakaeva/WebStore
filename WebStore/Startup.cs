@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using WebStore.Infrastructure.Conventions;
+using WebStore.DAL.Context;
+using WebStore.Data;
+//using WebStore.Infrastructure.Conventions;
 using WebStore.Infrastructure.Interfaces;
-using WebStore.Infrastructure.Middleware;
 using WebStore.Infrastructure.Services;
+using WebStore.Infrastructure.Services.InSQL;
 
 namespace WebStore
 {
@@ -23,6 +25,9 @@ namespace WebStore
         // to add services to the container:
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<WebStoreDB>(opt => opt.UseSqlServer(_configuration.GetConnectionString("Default")));
+            services.AddTransient<WebStoreDbInitializer>();
+
             //services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
             //services.AddScoped<IEmployeesData, InMemoryEmployeesData>();
             //services.AddSingleton<IEmployeesData, InMemoryEmployeesData>();
@@ -30,7 +35,7 @@ namespace WebStore
             services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
             //services.AddTransient<IEmployeesData>(service => new InMemoryEmployeesData());
           
-            services.AddTransient<IProductData, InMemoryProductData>();
+            services.AddTransient<IProductData, SqlProductData>();
             services
                 .AddControllersWithViews(opt =>
                 {
@@ -40,8 +45,10 @@ namespace WebStore
         }
 
         // to configure the HTTP request pipeline:
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, WebStoreDbInitializer db)
         {
+            db.Initialize();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
