@@ -137,7 +137,7 @@ namespace WebStore.Data
                 else
                 {
                     var errors = creation_result.Errors.Select(e => e.Description);
-                    throw new InvalidOperationException($"Ошибка при создании учётно записи администратора {string.Join(",", errors)}");
+                    throw new InvalidOperationException($"Ошибка при создании учётной записи администратора {string.Join(",", errors)}");
                 }
             }
         }

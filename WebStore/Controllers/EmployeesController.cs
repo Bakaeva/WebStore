@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
-using WebStore.Data;
 using WebStore.Models;
 using WebStore.Infrastructure.Interfaces;
 using WebStore.ViewModels;
 using System;
+using Microsoft.AspNetCore.Authorization;
+using WebStore.Domain.Entities.Identity;
 
 namespace WebStore.Controllers
 {
     //[Route("Users")]
+    [Authorize]
     public class EmployeesController : Controller
     {
         readonly IEmployeesData _employeeService;
@@ -32,9 +32,11 @@ namespace WebStore.Controllers
             return NotFound();
         }
 
+        [Authorize(Roles = Role.Administrator)]
         public IActionResult Create() => View("Edit", new EmployeesViewModel());
 
         #region Edit
+        [Authorize(Roles = Role.Administrator)]
         public IActionResult Edit(int? id)
         {
             if (id == null)
@@ -59,6 +61,7 @@ namespace WebStore.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Role.Administrator)]
         public IActionResult Edit(EmployeesViewModel model)
         {
             DateTime dateOfRegistration = new DateTime(2000, 9, 1); // дата регистрации фирмы
@@ -92,6 +95,7 @@ namespace WebStore.Controllers
         #endregion
 
         #region Delete
+        [Authorize(Roles = Role.Administrator)]
         public IActionResult Delete(int id)
         {
             if (id < 0)
@@ -113,6 +117,7 @@ namespace WebStore.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Role.Administrator)]
         public IActionResult DeleteConfirmed(int id)
         {
             if (id < 0)
