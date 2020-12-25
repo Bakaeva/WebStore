@@ -4,9 +4,11 @@ using WebStore.Domain.Entities;
 using WebStore.Infrastructure.Interfaces;
 using WebStore.Data;
 using WebStore.Domain;
+using System;
 
 namespace WebStore.Infrastructure.Services.InMemory
 {
+    [Obsolete("Класс устарел, потому что данные уже не хранятся в памяти. Используйте класс SqlProductData.cs", true)]
     public class InMemoryProductData : IProductData
     {
         public IEnumerable<Section> GetSections() => TestData.Sections;
@@ -27,5 +29,11 @@ namespace WebStore.Infrastructure.Services.InMemory
 
             return query;
         }
+
+        public Section GetSectionById(int id) => throw new NotSupportedException();
+
+        public Brand GetBrandById(int id) => throw new NotSupportedException();
+
+        public Product GetProductById(int id) => throw new NotSupportedException();
     }
 }
