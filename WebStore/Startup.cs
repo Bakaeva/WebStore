@@ -8,10 +8,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebStore.DAL.Context;
 using WebStore.Data;
+using WebStore.Domain.Entities.Identity;
 using WebStore.Infrastructure.Interfaces;
 using WebStore.Infrastructure.Services;
 using WebStore.Infrastructure.Services.InSQL;
-using WebStore.Domain.Entities.Identity;
+using WebStore.Infrastructure.Services.InCookies;
 
 namespace WebStore
 {
@@ -73,6 +74,8 @@ namespace WebStore
             //services.AddTransient<IEmployeesData>(service => new InMemoryEmployeesData());
           
             services.AddTransient<IProductData, SqlProductData>();
+            services.AddScoped<ICartService, InCookiesCartService>();
+
             services
                 .AddControllersWithViews(opt =>
                 {
