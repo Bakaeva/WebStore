@@ -11,9 +11,9 @@ namespace WebStore.Controllers
 
         public IActionResult Index() => View(_cartService.TransformFromCart());
 
-        public IActionResult AddToCart(int id, int cnt=1)
+        public IActionResult AddToCart(int id)
         {
-            _cartService.AddToCart(id, cnt);
+            _cartService.AddToCart(id);
             return RedirectToAction(nameof(Index));
         }
 

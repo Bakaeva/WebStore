@@ -53,15 +53,15 @@ namespace WebStore.Infrastructure.Services.InCookies
             _cartName = $"WebStore.Cart{user_name}";
         }
 
-        public void AddToCart(int id, int cnt)
+        public void AddToCart(int id)
         {
             var cart = Cart;
             var item = cart.Items.FirstOrDefault(i => i.ProductId == id);
 
             if (item == null)
-                cart.Items.Add(new CartItem { ProductId = id, Quantity = cnt });
+                cart.Items.Add(new CartItem { ProductId = id, Quantity = 1 });
             else
-                item.Quantity += cnt;
+                item.Quantity++;
 
             Cart = cart;
         }

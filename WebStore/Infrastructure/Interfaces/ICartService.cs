@@ -4,10 +4,9 @@ namespace WebStore.Infrastructure.Interfaces
 {
     public interface ICartService
     {
-        /// <summary>Добавление товара в корзину</summary>
+        /// <summary>Добавление 1шт товара в корзину</summary>
         /// <param name="id">ID товара</param>
-        /// <param name="cnt">Кол-во добавляемых единиц товара</param>
-        void AddToCart(int id, int cnt = 1);
+        void AddToCart(int id);
 
         /// <summary>Удаление 1шт товара из корзины</summary>
         /// <param name="id">ID товара</param>
