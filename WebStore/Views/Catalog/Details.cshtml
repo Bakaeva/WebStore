@@ -7,7 +7,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-3">
-                <partial name="Partial/_LeftSidebar"/>
+                <partial name="Partial/_LeftSidebar" />
             </div>
 
             <div class="col-sm-9 padding-right">
@@ -16,6 +16,7 @@
                         <div class="view-product">
                             <img src="~/images/shop/@Model.ImageUrl" alt="Фото товара" />
                             <h3>ZOOM</h3>
+
                         </div>
                         <div id="similar-product" class="carousel slide" data-ride="carousel">
 
@@ -57,8 +58,8 @@
                             <span>
                                 <span>@Model.Price.ToString("C")</span>
                                 <label>Количество:</label>
-                                <input type="text" value="1" />
-                                <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@Model.Id" class="btn btn-default cart">
+                                <input type="text" value="1" id="quantity" />
+                                <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@Model.Id" asp-route-cnt="smth" class="btn btn-default cart" id="myLink">
                                     <i class="fa fa-shopping-cart"></i>
                                     В корзину
                                 </a>
