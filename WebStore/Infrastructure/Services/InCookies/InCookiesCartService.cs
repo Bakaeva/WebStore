@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Linq;
 using WebStore.Domain;
@@ -13,6 +14,8 @@ namespace WebStore.Infrastructure.Services.InCookies
     {
         readonly IProductData _productData;
         readonly IHttpContextAccessor _httpContextAccessor;
+        readonly ILogger<InCookiesCartService> _logger;
+
         /// <summary>Соответствующее корзине название в Cookies</summary>
         readonly string _cartName;
 
@@ -42,10 +45,11 @@ namespace WebStore.Infrastructure.Services.InCookies
             cookies.Append(_cartName, cookie);
         }
 
-        public InCookiesCartService(IProductData productData, IHttpContextAccessor httpContextAccessor)
+        public InCookiesCartService(IProductData productData, IHttpContextAccessor httpContextAccessor, ILogger<InCookiesCartService> logger)
         {
             _productData = productData;
             _httpContextAccessor = httpContextAccessor;
+            _logger = logger;
 
             var user = httpContextAccessor.HttpContext!.User;
             var user_name = user.Identity.IsAuthenticated ? $"-{user.Identity.Name}" : null;
@@ -64,6 +68,7 @@ namespace WebStore.Infrastructure.Services.InCookies
                 item.Quantity += cnt;
 
             Cart = cart;
+            _logger.LogInformation($"В корзину добавлено {cnt} ед. товара с id={id}");
         }
 
         public void DecrementFromCart(int id)
@@ -79,6 +84,7 @@ namespace WebStore.Infrastructure.Services.InCookies
                 cart.Items.Remove(item);
 
             Cart = cart;
+            _logger.LogInformation($"Из корзины удалена 1 ед. товара с id={id}");
         }
 
         public void RemoveFromCart(int id)
@@ -91,6 +97,7 @@ namespace WebStore.Infrastructure.Services.InCookies
             cart.Items.Remove(item);
 
             Cart = cart;
+            _logger.LogInformation($"Из корзины полностью удалён товар с id={id}");
         }
 
         public void Clear()
@@ -100,6 +107,7 @@ namespace WebStore.Infrastructure.Services.InCookies
             cart.Items.Clear();
 
             Cart = cart;
+            _logger.LogInformation($"Корзина очищена");
         }
 
         public CartViewModel TransformFromCart()
