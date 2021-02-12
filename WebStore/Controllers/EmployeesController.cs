@@ -70,10 +70,10 @@ namespace WebStore.Controllers
                    + dateOfRegistration.ToShortDateString() + " и не позднее сегодняшней даты");
             //ModelState.AddModelError("", "Текст сообщения об ошибке"); // если в I параметре св-во не указано, то сообщение применимо ко всей модели
 
-            if (!ModelState.IsValid) return View(model);
-
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
+
+            if (!ModelState.IsValid) return View(model);
 
             var employee = new Employee
             {

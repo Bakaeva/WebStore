@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using WebStore.DAL.Context;
@@ -27,7 +28,9 @@ namespace WebStore.Infrastructure.Services.InSQL
 
         public IEnumerable<Product> GetProducts(ProductFilter filter = null)
         {
-            IQueryable<Product> query = _db.Products;
+            IQueryable<Product> query = _db.Products
+                .Include(p => p.Brand)
+                .Include(p => p.Section);
 
             if (filter?.Ids?.Length > 0)
             {
@@ -46,8 +49,54 @@ namespace WebStore.Infrastructure.Services.InSQL
         }
 
         public Product GetProductById(int id) => _db.Products
+            .Where(p => p.Id == id)
             .Include(p => p.Brand)
-            .Include(p => p.Section)
-            .FirstOrDefault(p => p.Id == id);
+            .Include(p => p.Section)            
+            .FirstOrDefault();
+
+        //int IProductData.AddProduct(Product product)
+        //{
+        //    if (product == null)
+        //        throw new ArgumentNullException(nameof(product));
+
+        //    if (_db.Products.Contains(product))
+        //        return product.Id;
+
+        //    product.Id = _db.Products.Select(item => item.Id).DefaultIfEmpty().Max() + 1;
+        //    _db.Products.Add(product);
+
+        //    return product.Id;
+        //}
+
+        void IProductData.UpdateProduct(Product product)
+        {
+            if (product == null)
+                throw new ArgumentNullException(nameof(product));
+
+            if (_db.Products.Contains(product))
+                return;
+
+            var db_item = GetProductById(product.Id);
+            if (db_item == null)
+                return;
+
+            db_item.Name = product.Name;
+            db_item.Price = product.Price;
+        }
+
+        bool IProductData.DeleteProduct(int id)
+        {
+            var product = GetProductById(id);
+            if (product == null)
+                return false;
+
+            _db.Products.Remove(product);
+            return true;
+        }
+
+        //public void Update(Employee employee)
+        //{
+            
+        //}
     }
 }
