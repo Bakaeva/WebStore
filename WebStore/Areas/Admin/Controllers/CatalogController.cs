@@ -4,6 +4,10 @@ using WebStore.Domain.Entities.Identity;
 using WebStore.Infrastructure.Interfaces;
 using WebStore.Domain.Entities;
 using System;
+using WebStore.ViewModels;
+using System.Threading.Tasks;
+using WebStore.DAL.Context;
+using System.Linq;
 
 namespace WebStore.Areas.Admin.Controllers
 {
@@ -16,23 +20,54 @@ namespace WebStore.Areas.Admin.Controllers
 
         public IActionResult Index() => View(_productData.GetProducts());
 
+        public IActionResult Create() => View("Edit", new ProductViewModel());
+
         #region Edit
-        public IActionResult Edit(int id)
+        public IActionResult Edit(int? id)
         {
-            var product = _productData.GetProductById(id);
+            if (id == null)
+                return View(new ProductViewModel()); // вызов представления-формы добавления товара
+
+            if (id < 0)
+                return BadRequest();
+
+            var product = _productData.GetProductById((int)id);
             if (product is null) return NotFound();
-            return View(product);
+
+            return View(new ProductViewModel
+            {
+                Id = (int)id,
+                Name = product.Name,
+                ImageUrl = product.ImageUrl,
+                Price = product.Price,
+                Brand = product.Brand.Name,
+                Section = product.Section.Name,
+            }); // вызов представления-формы редактирования товара
         }
 
         [HttpPost]
-        public IActionResult Edit(Product product)
+        public IActionResult Edit(ProductViewModel model)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
 
-            if (!ModelState.IsValid) return View(product);
+            if (!ModelState.IsValid) return View(model);
 
-            _productData.UpdateProduct(product);
+            var product = new Product
+            {
+                Id = model.Id,
+                Name = model.Name,
+                ImageUrl = model.ImageUrl,
+                Price = model.Price,
+                Brand = _productData.GetBrandByName(model.Brand),
+                Section = _productData.GetSectionByName(model.Section),
+            };
+
+            if (product.Id == 0)
+                _productData.AddProduct(product);
+            else
+                _productData.UpdateProduct(product);
+
             return RedirectToAction(nameof(Index));
         }
         #endregion
@@ -55,5 +90,10 @@ namespace WebStore.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
         #endregion
+
+        public IActionResult Commit()
+        {
+            return NoContent(); // временная заглушка
+        }
     }
 }

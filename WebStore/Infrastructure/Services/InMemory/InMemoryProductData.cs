@@ -36,10 +36,14 @@ namespace WebStore.Infrastructure.Services.InMemory
 
         public Product GetProductById(int id) => throw new NotSupportedException();
 
-        //int IProductData.AddProduct(Product product) => throw new NotSupportedException();
+        int IProductData.AddProduct(Product product) => throw new NotSupportedException();
 
         void IProductData.UpdateProduct(Product product) => throw new NotSupportedException();
 
         bool IProductData.DeleteProduct(int id) => throw new NotSupportedException();
+
+        Section IProductData.GetSectionByName(string name) => throw new NotSupportedException();
+
+        Brand IProductData.GetBrandByName(string name) => throw new NotSupportedException();
     }
 }

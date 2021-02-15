@@ -21,10 +21,16 @@ namespace WebStore.Infrastructure.Services.InSQL
         public Brand GetBrandById(int id) => GetBrands()
             .FirstOrDefault(brand => brand.Id == id);
 
+        public Brand GetBrandByName(string name) => GetBrands()
+            .FirstOrDefault(brand => brand.Name == name);
+
         public IEnumerable<Section> GetSections() => _db.Sections.Include(section => section.Products);
 
         public Section GetSectionById(int id) => GetSections()
             .FirstOrDefault(section => section.Id == id);
+
+        public Section GetSectionByName(string name) => GetSections()
+            .FirstOrDefault(section => section.Name == name);
 
         public IEnumerable<Product> GetProducts(ProductFilter filter = null)
         {
@@ -54,34 +60,37 @@ namespace WebStore.Infrastructure.Services.InSQL
             .Include(p => p.Section)            
             .FirstOrDefault();
 
-        //int IProductData.AddProduct(Product product)
-        //{
-        //    if (product == null)
-        //        throw new ArgumentNullException(nameof(product));
+        int IProductData.AddProduct(Product product)
+        {
+            //if (product == null)
+            //    throw new ArgumentNullException(nameof(product));
 
-        //    if (_db.Products.Contains(product))
-        //        return product.Id;
+            product.Id = _db.Products.Select(item => item.Id).DefaultIfEmpty().Max() + 1;
+            _db.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Products] ON");
+            _db.Products.Add(product);
+            _db.SaveChanges();
+            _db.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Products] OFF");
 
-        //    product.Id = _db.Products.Select(item => item.Id).DefaultIfEmpty().Max() + 1;
-        //    _db.Products.Add(product);
-
-        //    return product.Id;
-        //}
+            return product.Id;
+        }
 
         void IProductData.UpdateProduct(Product product)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
-
-            if (_db.Products.Contains(product))
-                return;
+            //if (product == null)
+            //    throw new ArgumentNullException(nameof(product));
 
             var db_item = GetProductById(product.Id);
             if (db_item == null)
                 return;
 
+            db_item.Order = product.Order;
             db_item.Name = product.Name;
+            //db_item.ImageUrl = product.ImageUrl;
+            //db_item.Brand = product.;
+            //db_item.Section = product.;
             db_item.Price = product.Price;
+
+            _db.SaveChanges();
         }
 
         bool IProductData.DeleteProduct(int id)
@@ -91,12 +100,8 @@ namespace WebStore.Infrastructure.Services.InSQL
                 return false;
 
             _db.Products.Remove(product);
+            _db.SaveChanges();
             return true;
         }
-
-        //public void Update(Employee employee)
-        //{
-            
-        //}
     }
 }

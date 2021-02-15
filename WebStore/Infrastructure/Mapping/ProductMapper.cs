@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using WebStore.Domain.Entities;
 using WebStore.ViewModels;
 
@@ -15,7 +13,8 @@ namespace WebStore.Infrastructure.Mapping
             Name = p.Name,
             Price = p.Price,
             ImageUrl = p.ImageUrl,
-            Brand = p.Brand?.Name
+            Brand = p.Brand?.Name,
+            Section = p.Section?.Name
         };
 
         public static IEnumerable<ProductViewModel> ToView(this IEnumerable<Product> p) => p.Select(ToView);

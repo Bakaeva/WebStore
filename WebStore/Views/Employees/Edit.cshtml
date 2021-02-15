@@ -1,6 +1,9 @@
 ﻿@model WebStore.ViewModels.EmployeesViewModel
 @{
-    ViewData["Title"] = $"Редактирование сотрудника с id={Model.Id}";
+    if (Model.Id == 0)
+        ViewData["Title"] = "Добавление сотрудника";
+    else
+        ViewData["Title"] = $"Редактирование сотрудника с id={Model.Id}";
 }
 
 <div class="container">

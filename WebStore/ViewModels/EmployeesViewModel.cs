@@ -33,7 +33,7 @@ namespace WebStore.ViewModels
         public int Age { get; set; }
 
         /// <summary>Дата устройства на работу</summary>
-        [Display(Name = "Дата устройства на работу")]
+        [Display(Name = "Дата трудоустройства")]
         public DateTime DateOfEmployment { get; set; }
 
         //public IEnumerable<ValidationResult> Validate(ValidationContext context)
