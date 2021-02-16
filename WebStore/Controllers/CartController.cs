@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebStore.Infrastructure.Interfaces;
+using WebStore.ViewModels;
 
 namespace WebStore.Controllers
 {
@@ -9,7 +10,10 @@ namespace WebStore.Controllers
 
         public CartController(ICartService cartService) => _cartService = cartService;
 
-        public IActionResult Index() => View(_cartService.TransformFromCart());
+        public IActionResult Index() => View(new CartOrderViewModel
+        {
+            Cart = _cartService.TransformFromCart()
+        });
 
         public IActionResult AddToCart(int id, int cnt = 1)
         {
@@ -39,6 +43,12 @@ namespace WebStore.Controllers
         public IActionResult Clear()
         {
             _cartService.Clear();
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult CheckOut(OrderViewModel model)
+        {
+            
             return RedirectToAction(nameof(Index));
         }
     }
