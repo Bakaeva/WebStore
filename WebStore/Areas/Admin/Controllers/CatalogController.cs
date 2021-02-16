@@ -40,8 +40,8 @@ namespace WebStore.Areas.Admin.Controllers
                 Name = product.Name,
                 ImageUrl = product.ImageUrl,
                 Price = product.Price,
-                Brand = product.Brand.Name,
-                Section = product.Section.Name,
+                Brand = product.Brand?.Name,
+                Section = product.Section?.Name,
             }); // вызов представления-формы редактирования товара
         }
 

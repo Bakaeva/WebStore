@@ -12,7 +12,7 @@ namespace WebStore.Domain.Entities
         public int Order { get; set; }
 
         /// <summary>id категории товара</summary>
-        public int SectionId​​ { get; set; }
+        public int? SectionId​​ { get; set; }
 
         [ForeignKey(nameof(SectionId​​))]
         [Display(Name = "Категория")]

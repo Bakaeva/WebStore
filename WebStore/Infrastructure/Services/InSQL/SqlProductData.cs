@@ -22,7 +22,7 @@ namespace WebStore.Infrastructure.Services.InSQL
             .FirstOrDefault(brand => brand.Id == id);
 
         public Brand GetBrandByName(string name) => GetBrands()
-            .FirstOrDefault(brand => brand.Name == name);
+            .FirstOrDefault(brand => brand.Name == name); // Brand.Name NOT NULL
 
         public IEnumerable<Section> GetSections() => _db.Sections.Include(section => section.Products);
 
@@ -30,7 +30,7 @@ namespace WebStore.Infrastructure.Services.InSQL
             .FirstOrDefault(section => section.Id == id);
 
         public Section GetSectionByName(string name) => GetSections()
-            .FirstOrDefault(section => section.Name == name);
+            .FirstOrDefault(section => section.Name == name); // Section.Name NOT NULL
 
         public IEnumerable<Product> GetProducts(ProductFilter filter = null)
         {
@@ -65,11 +65,11 @@ namespace WebStore.Infrastructure.Services.InSQL
             //if (product == null)
             //    throw new ArgumentNullException(nameof(product));
 
-            product.Id = _db.Products.Select(item => item.Id).DefaultIfEmpty().Max() + 1;
-            _db.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Products] ON");
-            _db.Products.Add(product);
+            //product.Id = _db.Products.Select(item => item.Id).DefaultIfEmpty().Max() + 1;
+            //_db.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Products] ON");
+            _db.Products.Add(product); // class Product : NamedEntity : Entity (Key generated)
+            //_db.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Products] OFF");
             _db.SaveChanges();
-            _db.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Products] OFF");
 
             return product.Id;
         }
