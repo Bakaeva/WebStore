@@ -29,7 +29,7 @@
         <div class="col-sm-6">
             @{
                 ViewData.TryGetValue("TotalPrice", out var totalPrice);
-                ViewData.TryGetValue("TotalAmount", out var totalAmount);
+                ViewData.TryGetValue("TotalQuantity", out var totalQuantity);
             }
             @if (totalPrice is decimal price && price > 0)
             {
@@ -38,7 +38,7 @@
                         <li>Налог: 0</li>
                         <li>Доставка: 0</li>
                         <li>Итого: <span>@price.ToString("C")</span></li>
-                        <li>       <span>@totalAmount</span></li>
+                        <li>       <span>@totalQuantity</span></li>
                     </ul>
                     <input class="btn btn-default check_out" type="submit" value="Оформить" />
                 </div>

@@ -68,6 +68,6 @@
         </div>
         <partial name="Partial/_CheckOut" model="Model.Order" view-data="@(new ViewDataDictionary(ViewData) {
            { "TotalPrice", Model.Cart.TotalPrice },
-           { "TotalAmount", Model.Cart.ItemsCount} })"/>
+           { "TotalQuantity", Model.Cart.ItemsCount} })"/>
     </div>
 </section><!--/#do_action-->
